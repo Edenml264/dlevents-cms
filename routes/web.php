@@ -46,6 +46,10 @@ Route::middleware(['auth', 'verified'])->prefix('admin')->name('admin.')->group(
         // Gestión de medios
         Route::post('upload', [MediaController::class, 'upload'])->name('upload');
         Route::delete('media/{media}', [MediaController::class, 'destroy'])->name('media.destroy');
+        
+        // Ruta para inicializar las secciones de la página de inicio
+        Route::get('/initialize-home', [PageSectionController::class, 'initializeHomeSections'])
+            ->name('initialize-home');
     });
 });
 

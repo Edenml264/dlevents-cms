@@ -31,7 +31,7 @@ Sistema de gestión de contenido (CMS) para Diamond Lighting Events, especializa
 
 1. Clonar el repositorio:
 ```bash
-git clone [url-del-repositorio]
+git clone git@github.com:Edenml264/dlevents-cms.git
 cd dlevents
 ```
 

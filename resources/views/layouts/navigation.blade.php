@@ -15,6 +15,12 @@
                     <x-nav-link :href="route('admin.dashboard')" :active="request()->routeIs('admin.dashboard')">
                         {{ __('Dashboard') }}
                     </x-nav-link>
+                    <x-nav-link :href="route('admin.cms.index')" :active="request()->routeIs('admin.cms.*')">
+                        {{ __('Gestión de Contenido') }}
+                    </x-nav-link>
+                    <x-nav-link :href="route('admin.leads.index')" :active="request()->routeIs('admin.leads.*')">
+                        {{ __('Leads') }}
+                    </x-nav-link>
                 </div>
             </div>
 
@@ -35,11 +41,14 @@
                     </x-slot>
 
                     <x-slot name="content">
-                        <x-dropdown-link :href="route('admin.cms.sections.index')" :active="request()->routeIs('admin.cms.sections.*')">
-                            {{ __('Contenidos') }}
+                        <x-dropdown-link :href="route('admin.cms.index')" :active="request()->routeIs('admin.cms.*')">
+                            {{ __('Gestión de Contenido') }}
                         </x-dropdown-link>
                         <x-dropdown-link :href="route('admin.leads.index')" :active="request()->routeIs('admin.leads.*')">
                             {{ __('Leads') }}
+                        </x-dropdown-link>
+                        <x-dropdown-link :href="route('admin.profile.edit')" :active="request()->routeIs('admin.profile.*')">
+                            {{ __('Perfil') }}
                         </x-dropdown-link>
                     </x-slot>
                 </x-dropdown>
@@ -95,8 +104,8 @@
             <x-responsive-nav-link :href="route('admin.dashboard')" :active="request()->routeIs('admin.dashboard')">
                 {{ __('Dashboard') }}
             </x-responsive-nav-link>
-            <x-responsive-nav-link :href="route('admin.cms.sections.index')" :active="request()->routeIs('admin.cms.sections.*')">
-                {{ __('Contenidos') }}
+            <x-responsive-nav-link :href="route('admin.cms.index')" :active="request()->routeIs('admin.cms.*')">
+                {{ __('Gestión de Contenido') }}
             </x-responsive-nav-link>
             <x-responsive-nav-link :href="route('admin.leads.index')" :active="request()->routeIs('admin.leads.*')">
                 {{ __('Leads') }}

@@ -27,32 +27,9 @@
                     <i class="fas fa-user-cog mr-2"></i>Mi Perfil
                 </a>
                 <div class="space-y-1">
-                    <div x-data="{ open: false }" class="space-y-1">
-                        <button type="button" @click="open = !open"
-                            class="text-gray-600 hover:bg-gray-50 hover:text-gray-900 group w-full flex items-center pl-2 pr-1 py-2 text-left text-sm font-medium rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
-                            :class="{ 'bg-gray-100': open }">
-                            <svg class="mr-3 flex-shrink-0 h-6 w-6 text-gray-400 group-hover:text-gray-500"
-                                xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                    d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
-                            </svg>
-                            <span class="flex-1">Gestión de Contenido</span>
-                            <svg class="text-gray-400 ml-3 flex-shrink-0 h-5 w-5 transform group-hover:text-gray-400 transition-colors ease-in-out duration-150"
-                                :class="{ 'rotate-90': open }" viewBox="0 0 20 20" aria-hidden="true">
-                                <path d="M6 6L14 10L6 14V6Z" fill="currentColor" />
-                            </svg>
-                        </button>
-                        <div class="space-y-1" x-show="open" style="display: none;">
-                            <a href="{{ route('admin.cms.sections.index') }}"
-                                class="group w-full flex items-center pl-11 pr-2 py-2 text-sm font-medium text-gray-600 rounded-md hover:text-gray-900 hover:bg-gray-50">
-                                Secciones
-                            </a>
-                            <a href="{{ route('admin.cms.menu.index') }}"
-                                class="group w-full flex items-center pl-11 pr-2 py-2 text-sm font-medium text-gray-600 rounded-md hover:text-gray-900 hover:bg-gray-50">
-                                Menú
-                            </a>
-                        </div>
-                    </div>
+                    <a href="{{ route('admin.cms.index') }}" class="block px-4 py-2 hover:bg-gray-700 {{ request()->routeIs('admin.cms.*') ? 'bg-gray-700' : '' }}">
+                        <i class="fas fa-edit mr-2"></i>Gestión de Contenido
+                    </a>
                 </div>
                 <form method="POST" action="{{ route('logout') }}" class="block">
                     @csrf

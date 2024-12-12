@@ -137,6 +137,94 @@ El sistema permite personalizar:
 4. Push a la rama (`git push origin feature/AmazingFeature`)
 5. Abra un Pull Request
 
+## Guía de Deployment en Hostgator
+
+### Requisitos del Servidor
+- PHP 8.2 o superior
+- MySQL 5.7 o superior
+- Extensiones PHP requeridas:
+  - BCMath
+  - Ctype
+  - JSON
+  - Mbstring
+  - OpenSSL
+  - PDO
+  - Tokenizer
+  - XML
+  - Fileinfo
+
+### Pasos para el Deployment
+
+1. **Preparación del Proyecto**
+   ```bash
+   # Optimizar autoloader
+   composer install --optimize-autoloader --no-dev
+   
+   # Optimizar configuración
+   php artisan config:cache
+   php artisan route:cache
+   php artisan view:cache
+   ```
+
+2. **Configuración en Hostgator**
+   - Accede al cPanel de Hostgator
+   - Selecciona PHP Version Manager
+   - Configura PHP 8.2 o superior para tu dominio
+   - Crea una nueva base de datos MySQL desde cPanel
+
+3. **Subida de Archivos**
+   - Sube todos los archivos al directorio `public_html`
+   - Mueve el contenido de la carpeta `public` a `public_html`
+   - Ajusta las rutas en `index.php`
+
+4. **Configuración del Entorno**
+   - Renombra `.env.example` a `.env`
+   - Configura las variables de entorno:
+     ```
+     APP_NAME="DL Events"
+     APP_ENV=production
+     APP_DEBUG=false
+     APP_URL=https://tudominio.com
+     
+     DB_CONNECTION=mysql
+     DB_HOST=localhost
+     DB_PORT=3306
+     DB_DATABASE=tu_base_de_datos
+     DB_USERNAME=tu_usuario
+     DB_PASSWORD=tu_contraseña
+     ```
+
+5. **Permisos de Archivos**
+   ```bash
+   chmod -R 755 storage bootstrap/cache
+   ```
+
+6. **Instalación Final**
+   ```bash
+   php artisan migrate --force
+   php artisan db:seed
+   php artisan storage:link
+   ```
+
+### Solución de Problemas Comunes
+
+1. **Error 500**
+   - Verifica los permisos de las carpetas
+   - Revisa el archivo `.env`
+   - Consulta los logs en `storage/logs`
+
+2. **Problemas de Base de Datos**
+   - Confirma las credenciales en `.env`
+   - Verifica que la base de datos existe
+   - Asegúrate que el usuario tiene permisos
+
+3. **Archivos no Encontrados**
+   - Verifica la configuración del documento root
+   - Asegúrate que los enlaces simbólicos están correctos
+
+Para soporte adicional, contacta a:
+- Email: ventas@edenmendez.com
+
 ## Licencia
 
 Este proyecto está bajo la Licencia MIT. Ver el archivo `LICENSE` para más detalles.

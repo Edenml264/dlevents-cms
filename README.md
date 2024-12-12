@@ -98,8 +98,8 @@ php artisan serve
 
 1. URL del panel de administración: `http://localhost:8000/admin`
 2. Credenciales por defecto:
-   - Email: `admin@diamondlighting.com`
-   - Contraseña: `DLAdmin@2024`
+   - Usuario: `admin`
+   - Contraseña: `Admin@2024`
 
 ## Personalización
 
@@ -144,5 +144,5 @@ Este proyecto está bajo la Licencia MIT. Ver el archivo `LICENSE` para más det
 ## Soporte
 
 Para soporte y consultas, por favor contactar a:
-- Email: soporte@diamondlighting.com
+- Email: ventas@edenmendez.com
 - Teléfono: (XXX) XXX-XXXX

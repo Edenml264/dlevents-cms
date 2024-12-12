@@ -222,6 +222,48 @@ El sistema permite personalizar:
    - Verifica la configuración del documento root
    - Asegúrate que los enlaces simbólicos están correctos
 
+## Despliegue Automático con GitHub Actions
+
+Este proyecto está configurado para realizar despliegue automático a Hostgator cuando se hace push a la rama `main`.
+
+### Configuración Inicial
+
+1. **Obtener Credenciales FTP de Hostgator**
+   - Accede al cPanel de Hostgator
+   - Ve a "FTP Accounts"
+   - Crea o usa una cuenta FTP existente
+   - Guarda la siguiente información:
+     - Servidor FTP (hostname)
+     - Usuario FTP
+     - Contraseña FTP
+
+2. **Configurar Secrets en GitHub**
+   - Ve a tu repositorio en GitHub
+   - Accede a "Settings" > "Secrets and variables" > "Actions"
+   - Agrega los siguientes secrets:
+     - `FTP_SERVER` (ejemplo: ftp.tudominio.com)
+     - `FTP_USERNAME` (tu usuario FTP)
+     - `FTP_PASSWORD` (tu contraseña FTP)
+
+### Funcionamiento
+
+El despliegue automático:
+1. Se activa cuando se hace push a la rama `main`
+2. Instala las dependencias necesarias
+3. Optimiza la aplicación Laravel
+4. Sube los archivos actualizados vía FTP a Hostgator
+
+### Notas Importantes
+
+- La primera vez, deberás configurar manualmente la base de datos y el archivo `.env` en el servidor
+- Los archivos excluidos del despliegue incluyen:
+  - `.git`
+  - `node_modules`
+  - `README.md`
+  - `.env.example`
+  - `phpunit.xml`
+- Asegúrate de mantener las variables de entorno actualizadas en el servidor
+
 Para soporte adicional, contacta a:
 - Email: ventas@edenmendez.com
 

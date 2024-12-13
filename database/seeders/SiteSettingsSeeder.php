@@ -96,7 +96,10 @@ class SiteSettingsSeeder extends Seeder
         ];
 
         foreach ($settings as $setting) {
-            SiteSetting::create($setting);
+            SiteSetting::updateOrCreate(
+                ['key' => $setting['key']],
+                $setting
+            );
         }
     }
 }

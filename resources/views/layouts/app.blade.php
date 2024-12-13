@@ -17,29 +17,7 @@
 </head>
 <body class="font-sans antialiased">
     <div class="min-h-screen bg-white">
-        <!-- Navigation -->
-        <nav class="bg-white border-b border-dl-gold/20">
-            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                <div class="flex justify-between h-24">
-                    <div class="flex">
-                        <!-- Logo -->
-                        <div class="flex-shrink-0 flex items-center">
-                            <a href="{{ route('home') }}">
-                                <img src="{{ asset('images/logo.png') }}" alt="Diamond Lighting Events" class="h-16">
-                            </a>
-                        </div>
-                    </div>
-                    
-                    <!-- Navigation Links -->
-                    <div class="hidden sm:flex sm:items-center sm:ml-6 space-x-8">
-                        <a href="{{ route('home') }}" class="text-dl-brown hover:text-dl-gold-dark transition">Inicio</a>
-                        <a href="{{ route('services') }}" class="text-dl-brown hover:text-dl-gold-dark transition">Servicios</a>
-                        <a href="{{ route('gallery') }}" class="text-dl-brown hover:text-dl-gold-dark transition">Galería</a>
-                        <a href="{{ route('contact') }}" class="text-dl-brown hover:text-dl-gold-dark transition">Contacto</a>
-                    </div>
-                </div>
-            </div>
-        </nav>
+        <x-navbar />
 
         <!-- Page Content -->
         <main>
@@ -47,36 +25,7 @@
         </main>
 
         <!-- Footer -->
-        <footer class="bg-dl-brown text-white">
-            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-                    <div>
-                        <h3 class="text-dl-gold text-lg font-semibold mb-4">Contacto</h3>
-                        <p class="mb-2">Email: info@diamondlighting.com</p>
-                        <p>Tel: (123) 456-7890</p>
-                    </div>
-                    <div>
-                        <h3 class="text-dl-gold text-lg font-semibold mb-4">Servicios</h3>
-                        <ul class="space-y-2">
-                            <li>DJ Profesional</li>
-                            <li>Iluminación LED</li>
-                            <li>Pantallas LED</li>
-                            <li>Pistas de Baile</li>
-                            <li>Estrados</li>
-                        </ul>
-                    </div>
-                    <div>
-                        <h3 class="text-dl-gold text-lg font-semibold mb-4">Síguenos</h3>
-                        <div class="flex space-x-4">
-                            <!-- Aquí irán los íconos de redes sociales -->
-                        </div>
-                    </div>
-                </div>
-                <div class="mt-8 pt-8 border-t border-dl-gold/20 text-center">
-                    <p>&copy; {{ date('Y') }} Diamond Lighting Events. Todos los derechos reservados.</p>
-                </div>
-            </div>
-        </footer>
+        <x-footer />
     </div>
 </body>
 </html>

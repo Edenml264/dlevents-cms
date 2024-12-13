@@ -1,6 +1,17 @@
 # Diamond Lighting Events CMS
 
-Sistema de gestión de contenido para Diamond Lighting Events, desarrollado con Laravel 10 y Tailwind CSS.
+Sistema de gestión de contenido para Diamond Lighting Events, desarrollado con Laravel 11 y Tailwind CSS. Esta aplicación web moderna y robusta está diseñada específicamente para gestionar y mostrar servicios de iluminación y eventos, ofreciendo una experiencia de usuario intuitiva tanto para administradores como para clientes.
+
+## Stack Tecnológico
+
+- **Backend:** Laravel 11.x
+- **Frontend:** 
+  - Tailwind CSS 3.x
+  - Alpine.js 3.x
+  - Vite 6.x
+- **Base de Datos:** MySQL/SQLite
+- **Autenticación:** Laravel Breeze
+- **Testing:** Pest PHP
 
 ## Características
 

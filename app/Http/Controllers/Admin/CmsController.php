@@ -19,7 +19,10 @@ class CmsController extends Controller
     {
         $settings = SiteSetting::orderBy('group')->orderBy('order')->get()
             ->groupBy('group');
-        return view('admin.cms.settings', compact('settings'));
+            
+        $navbarSettings = \App\Models\NavbarSetting::getCurrentSettings();
+        
+        return view('admin.cms.settings', compact('settings', 'navbarSettings'));
     }
 
     public function updateSettings(Request $request)

@@ -18,7 +18,7 @@
                         <div x-data="{ activeTab: 'general' }">
                             <div class="border-b border-gray-200 mb-6">
                                 <nav class="-mb-px flex space-x-8">
-                                    @foreach(['general' => 'General', 'typography' => 'Tipografía', 'colors' => 'Colores', 'images' => 'Imágenes'] as $tab => $label)
+                                    @foreach(['general' => 'General', 'navbar' => 'Navbar', 'typography' => 'Tipografía', 'colors' => 'Colores', 'images' => 'Imágenes'] as $tab => $label)
                                         <button type="button"
                                             @click="activeTab = '{{ $tab }}'"
                                             :class="{ 'border-dl-gold text-dl-gold': activeTab === '{{ $tab }}' }"
@@ -29,7 +29,75 @@
                                 </nav>
                             </div>
 
-                            <!-- Contenido de las Tabs -->
+                            <!-- Tab del Navbar -->
+                            <div x-show="activeTab === 'navbar'" class="space-y-6">
+                                <div class="border-b border-gray-200 pb-6">
+                                    <div class="flex justify-between items-start">
+                                        <div>
+                                            <h3 class="text-lg font-medium text-gray-900">Configuración del Navbar</h3>
+                                            <p class="mt-1 text-sm text-gray-500">
+                                                Personaliza la apariencia y funcionalidad del menú principal
+                                            </p>
+                                        </div>
+                                        <a href="{{ route('admin.cms.navbar.edit') }}" 
+                                           class="inline-flex items-center px-4 py-2 bg-dl-gold border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-dl-gold-dark">
+                                            <i class="fas fa-edit mr-2"></i>
+                                            Configurar Navbar
+                                        </a>
+                                    </div>
+
+                                    <!-- Vista previa de la configuración actual -->
+                                    <div class="mt-6 bg-gray-50 rounded-lg p-4">
+                                        <h4 class="text-sm font-medium text-gray-500 mb-4">Configuración Actual</h4>
+                                        
+                                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                            <!-- Logo -->
+                                            <div>
+                                                <h5 class="text-sm font-medium text-gray-700 mb-2">Logo</h5>
+                                                @if($navbarSettings->logo_path)
+                                                    <img src="{{ Storage::url($navbarSettings->logo_path) }}" 
+                                                         alt="Logo actual" 
+                                                         class="h-10 object-contain bg-white p-2 rounded">
+                                                @else
+                                                    <p class="text-sm text-gray-500">No hay logo configurado</p>
+                                                @endif
+                                            </div>
+
+                                            <!-- Botón de Contacto -->
+                                            <div>
+                                                <h5 class="text-sm font-medium text-gray-700 mb-2">Botón de Contacto</h5>
+                                                <div class="flex items-center space-x-2">
+                                                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium {{ $navbarSettings->show_contact_button ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800' }}">
+                                                        {{ $navbarSettings->show_contact_button ? 'Activado' : 'Desactivado' }}
+                                                    </span>
+                                                    @if($navbarSettings->show_contact_button && $navbarSettings->contact_phone)
+                                                        <span class="text-sm text-gray-600">
+                                                            {{ $navbarSettings->contact_phone }}
+                                                        </span>
+                                                    @endif
+                                                </div>
+                                            </div>
+
+                                            <!-- Redes Sociales -->
+                                            <div class="md:col-span-2">
+                                                <h5 class="text-sm font-medium text-gray-700 mb-2">Redes Sociales</h5>
+                                                <div class="flex flex-wrap gap-2">
+                                                    @foreach($navbarSettings->social_links as $network => $url)
+                                                        @if($url)
+                                                            <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-dl-gold bg-opacity-10 text-dl-gold">
+                                                                <i class="fab fa-{{ $network }} mr-1"></i>
+                                                                {{ ucfirst($network) }}
+                                                            </span>
+                                                        @endif
+                                                    @endforeach
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Otras Tabs -->
                             @foreach($settings as $group => $groupSettings)
                                 <div x-show="activeTab === '{{ $group }}'" class="space-y-6">
                                     @foreach($groupSettings as $setting)
@@ -46,10 +114,10 @@
                                                 @switch($setting->type)
                                                     @case('color')
                                                         <input type="color" 
-                                                            name="settings[{{ $setting->key }}]" 
-                                                            id="{{ $setting->key }}"
-                                                            value="{{ $setting->value }}"
-                                                            class="h-10 w-full rounded-md">
+                                                               name="settings[{{ $setting->key }}]" 
+                                                               id="{{ $setting->key }}"
+                                                               value="{{ $setting->value }}"
+                                                               class="h-10 w-full rounded-md">
                                                         @break
                                                     @case('image')
                                                         <div class="flex items-center space-x-4">
@@ -57,29 +125,18 @@
                                                                 <img src="{{ $setting->value }}" alt="{{ $setting->label }}" class="h-12 w-12 object-cover rounded">
                                                             @endif
                                                             <input type="file" 
-                                                                name="settings[{{ $setting->key }}]" 
-                                                                id="{{ $setting->key }}"
-                                                                accept="image/*"
-                                                                class="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-dl-gold file:text-white hover:file:bg-dl-gold-dark">
+                                                                   name="settings[{{ $setting->key }}]" 
+                                                                   id="{{ $setting->key }}"
+                                                                   accept="image/*"
+                                                                   class="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-dl-gold file:text-white hover:file:bg-dl-gold-dark">
                                                         </div>
-                                                        @break
-                                                    @case('font')
-                                                        <select name="settings[{{ $setting->key }}]" 
-                                                            id="{{ $setting->key }}"
-                                                            class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-dl-gold focus:border-dl-gold sm:text-sm rounded-md">
-                                                            @foreach(json_decode($setting->options) as $option)
-                                                                <option value="{{ $option }}" @selected($setting->value === $option)>
-                                                                    {{ $option }}
-                                                                </option>
-                                                            @endforeach
-                                                        </select>
                                                         @break
                                                     @default
                                                         <input type="text" 
-                                                            name="settings[{{ $setting->key }}]" 
-                                                            id="{{ $setting->key }}"
-                                                            value="{{ $setting->value }}"
-                                                            class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-dl-gold focus:border-dl-gold sm:text-sm">
+                                                               name="settings[{{ $setting->key }}]" 
+                                                               id="{{ $setting->key }}"
+                                                               value="{{ $setting->value }}"
+                                                               class="mt-1 focus:ring-dl-gold focus:border-dl-gold block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
                                                 @endswitch
                                             </div>
                                         </div>

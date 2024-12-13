@@ -9,6 +9,7 @@ use App\Http\Controllers\Admin\LeadController;
 use App\Http\Controllers\Admin\CmsController;
 use App\Http\Controllers\Admin\MediaController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\Admin\NavbarSettingController;
 use Illuminate\Support\Facades\Route;
 
 // Rutas públicas
@@ -32,6 +33,10 @@ Route::middleware(['auth', 'verified'])->prefix('admin')->name('admin.')->group(
         Route::get('/page/{page}', [CmsController::class, 'editPage'])->name('edit-page');
         Route::get('/preview/{page}', [CmsController::class, 'preview'])->name('preview');
         Route::put('/section/{section}', [CmsController::class, 'updateSection'])->name('section.update');
+        
+        // Rutas para la configuración del navbar
+        Route::get('/navbar', [NavbarSettingController::class, 'edit'])->name('navbar.edit');
+        Route::put('/navbar', [NavbarSettingController::class, 'update'])->name('navbar.update');
     });
 
     // Leads

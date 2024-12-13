@@ -222,6 +222,112 @@ El sistema permite personalizar:
    - Verifica la configuración del documento root
    - Asegúrate que los enlaces simbólicos están correctos
 
+## Despliegue Manual mediante FTP
+
+### Preparación Local
+
+1. **Optimizar el Proyecto**
+   ```bash
+   # Limpiar cachés
+   php artisan cache:clear
+   php artisan config:clear
+   php artisan view:clear
+   
+   # Instalar dependencias de producción
+   composer install --no-dev --optimize-autoloader
+   
+   # Optimizar la aplicación
+   php artisan config:cache
+   php artisan route:cache
+   php artisan view:cache
+   ```
+
+2. **Archivos a Ignorar**
+   No subir los siguientes archivos/carpetas:
+   - `.git/`
+   - `.github/`
+   - `node_modules/`
+   - `.env`
+   - `.env.example`
+   - `.gitignore`
+   - `README.md`
+   - `phpunit.xml`
+   - `tests/`
+
+### Proceso de Despliegue
+
+1. **Primera Vez**
+   - Conectar al servidor FTP usando FileZilla o similar
+   - Subir todos los archivos excepto los ignorados
+   - Mover el contenido de `public/` a `public_html/`
+   - Configurar `.env` en el servidor con las credenciales correctas
+   - Ejecutar vía SSH o panel de control:
+     ```bash
+     php artisan migrate --force
+     php artisan db:seed
+     php artisan storage:link
+     ```
+
+2. **Actualizaciones**
+   - Identificar archivos modificados desde el último commit
+   - Subir solo los archivos modificados
+   - Si hay cambios en la base de datos:
+     ```bash
+     php artisan migrate --force
+     ```
+
+### Estructura en Hostgator
+
+```
+public_html/           # Contenido de la carpeta public de Laravel
+├── css/
+├── js/
+├── index.php         # Punto de entrada (ajustar rutas)
+└── .htaccess
+[directorio_superior]/
+├── app/
+├── bootstrap/
+├── config/
+├── database/
+├── resources/
+├── routes/
+├── storage/          # Asegurar permisos (755)
+├── vendor/
+└── .env             # Configuración de producción
+```
+
+### Consejos de Seguridad
+
+1. **Permisos de Archivos**
+   ```bash
+   find /path/to/your/laravel/app -type f -exec chmod 644 {} \;
+   find /path/to/your/laravel/app -type d -exec chmod 755 {} \;
+   chmod -R 755 storage bootstrap/cache
+   ```
+
+2. **Archivo .htaccess**
+   ```apache
+   <IfModule mod_rewrite.c>
+       RewriteEngine On
+       RewriteRule ^(.*)$ public/$1 [L]
+   </IfModule>
+   
+   # Proteger archivos sensibles
+   <FilesMatch "^\.env|composer\.json|composer\.lock|package\.json|package-lock\.json|webpack\.mix\.js">
+       Order allow,deny
+       Deny from all
+   </FilesMatch>
+   ```
+
+### Lista de Verificación Post-Despliegue
+
+1. Verificar que la aplicación carga correctamente
+2. Comprobar que los assets (CSS/JS) se cargan
+3. Verificar que los formularios funcionan
+4. Comprobar el acceso al panel de administración
+5. Verificar que las imágenes y archivos se suben correctamente
+6. Revisar los logs en `storage/logs` por errores
+
 ## Despliegue Automático con GitHub Actions
 
 Este proyecto está configurado para realizar despliegue automático a Hostgator cuando se hace push a la rama `main`.

@@ -30,9 +30,16 @@ Route::middleware(['auth', 'verified'])->prefix('admin')->name('admin.')->group(
         Route::get('/', [CmsController::class, 'index'])->name('index');
         Route::get('/settings', [CmsController::class, 'settings'])->name('settings');
         Route::post('/settings', [CmsController::class, 'updateSettings'])->name('settings.update');
-        Route::get('/page/{page}', [CmsController::class, 'editPage'])->name('edit-page');
+        
+        // Rutas de páginas
+        Route::get('/page/{page}', [CmsController::class, 'editPage'])->name('page.edit');
+        Route::post('/page/{page}', [CmsController::class, 'updatePage'])->name('page.update');
         Route::get('/preview/{page}', [CmsController::class, 'preview'])->name('preview');
-        Route::put('/section/{section}', [CmsController::class, 'updateSection'])->name('section.update');
+        
+        // Rutas de secciones
+        Route::get('/sections/{page}', [CmsController::class, 'sections'])->name('sections');
+        Route::get('/section/{section}', [CmsController::class, 'editSection'])->name('section.edit');
+        Route::patch('/section/{section}', [CmsController::class, 'updateSection'])->name('section.update');
         
         // Rutas para la configuración del navbar
         Route::get('/navbar', [NavbarSettingController::class, 'edit'])->name('navbar.edit');

@@ -5,8 +5,10 @@ namespace Database\Seeders;
 use App\Models\User;
 use Database\Seeders\AdminUserSeeder;
 use Database\Seeders\PagesTableSeeder;
+use Database\Seeders\PageSectionsTableSeeder;
 use Database\Seeders\SiteSettingsSeeder;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\Hash;
 
 class DatabaseSeeder extends Seeder
 {
@@ -21,12 +23,14 @@ class DatabaseSeeder extends Seeder
             ['email' => 'test@example.com'],
             [
                 'name' => 'Test User',
+                'password' => Hash::make('password'),
             ]
         );
 
         $this->call([
             AdminUserSeeder::class,
             PagesTableSeeder::class,
+            PageSectionsTableSeeder::class,
             SiteSettingsSeeder::class,
         ]);
     }

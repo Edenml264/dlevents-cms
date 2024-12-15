@@ -10,10 +10,11 @@ use App\Http\Controllers\Admin\CmsController;
 use App\Http\Controllers\Admin\MediaController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\Admin\NavbarSettingController;
+use App\Http\Controllers\Admin\UploadController;
 use Illuminate\Support\Facades\Route;
 
 // Rutas públicas
-Route::get('/', [HomeController::class, 'index'])->name('home');
+Route::get('/', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 Route::get('/servicios', [ServiceController::class, 'index'])->name('services');
 Route::get('/galeria', [GalleryController::class, 'index'])->name('gallery');
 Route::get('/contacto', [ContactController::class, 'index'])->name('contact');
@@ -56,8 +57,12 @@ Route::middleware(['auth', 'verified'])->prefix('admin')->name('admin.')->group(
     Route::put('/profile/password', [ProfileController::class, 'password'])->name('profile.password.update');
 
     // Media management
-    Route::post('upload', [MediaController::class, 'upload'])->name('upload');
+    Route::post('media/upload', [MediaController::class, 'upload'])->name('media.upload');
     Route::delete('media/{media}', [MediaController::class, 'destroy'])->name('media.destroy');
+});
+
+Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () {
+    Route::post('/upload/image', [App\Http\Controllers\Admin\UploadController::class, 'image'])->name('upload.image');
 });
 
 require __DIR__.'/auth.php';

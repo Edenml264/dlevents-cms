@@ -2,8 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
 use App\Models\PageSection;
+use App\Models\Setting;
+use Illuminate\Http\Request;
 
 class HomeController extends Controller
 {
@@ -14,6 +15,9 @@ class HomeController extends Controller
             ->orderBy('order')
             ->get();
 
-        return view('home.index', compact('sections'));
+        $navbar = Setting::where('key', 'navbar')->first()?->value;
+        $footer = Setting::where('key', 'footer')->first()?->value;
+
+        return view('welcome', compact('sections', 'navbar', 'footer'));
     }
 }

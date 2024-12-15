@@ -153,58 +153,22 @@ class PageSectionController extends Controller
 
     public function update(Request $request, PageSection $section)
     {
-        $request->validate([
-            'name' => 'required|string|max:255',
-            'identifier' => 'required|string|max:255|unique:page_sections,identifier,' . $section->id,
-            'type' => 'required|in:text,html,image,gallery',
-            'order' => 'required|integer|min:0',
-            'is_active' => 'boolean',
-            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
-            'gallery.*' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
-            'content' => 'nullable|string',
-            'existing_gallery.*' => 'nullable|string',
+        $data = $request->validate([
+            'title' => 'nullable|string|max:255',
+            'content' => 'required|string',
+            'order' => 'required|integer|min:1',
+            'is_active' => 'boolean'
         ]);
 
-        $data = $request->only(['name', 'identifier', 'type', 'order', 'page']);
         $data['is_active'] = $request->has('is_active');
-
-        // Manejar el contenido según el tipo
-        switch ($request->type) {
-            case 'image':
-                if ($request->hasFile('image')) {
-                    // Eliminar imagen anterior si existe
-                    if ($section->content) {
-                        Storage::disk('public')->delete($section->content);
-                    }
-                    $data['content'] = $request->file('image')->store('sections', 'public');
-                }
-                break;
-
-            case 'gallery':
-                $images = [];
-                // Mantener imágenes existentes seleccionadas
-                if ($request->has('existing_gallery')) {
-                    $images = $request->existing_gallery;
-                }
-                // Agregar nuevas imágenes
-                if ($request->hasFile('gallery')) {
-                    foreach ($request->file('gallery') as $image) {
-                        $images[] = $image->store('sections', 'public');
-                    }
-                }
-                $data['content'] = json_encode($images);
-                break;
-
-            default:
-                $data['content'] = $request->content;
-                break;
-        }
 
         $section->update($data);
 
-        return redirect()
-            ->route('admin.cms.sections.index', ['page' => $section->page])
-            ->with('success', 'Sección actualizada correctamente');
+        if ($request->ajax()) {
+            return response()->json(['success' => true]);
+        }
+
+        return back()->with('success', 'Sección actualizada correctamente.');
     }
 
     public function destroy(PageSection $section)

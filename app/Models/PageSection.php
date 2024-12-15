@@ -9,6 +9,7 @@ class PageSection extends Model
     protected $fillable = [
         'name',
         'identifier',
+        'title',
         'page',
         'content',
         'type',

@@ -17,15 +17,8 @@
 </head>
 <body class="font-sans antialiased">
     <div class="min-h-screen bg-white">
-        <x-navbar />
-
         <!-- Page Content -->
-        <main>
-            {{ $slot }}
-        </main>
-
-        <!-- Footer -->
-        <x-footer />
+        @yield('content')
     </div>
 </body>
 </html>

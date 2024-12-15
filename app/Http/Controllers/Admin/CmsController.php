@@ -67,7 +67,43 @@ class CmsController extends Controller
 
     public function updateSection(Request $request, PageSection $section)
     {
-        $section->update($request->all());
-        return back()->with('success', 'Sección actualizada correctamente');
+        try {
+            $data = $request->validate([
+                'title' => 'nullable|string|max:255',
+                'content' => 'required|string',
+                'order' => 'required|integer|min:1',
+                'is_active' => 'required|in:0,1'
+            ]);
+
+            $data['is_active'] = (bool)$data['is_active'];
+
+            $section->update($data);
+
+            if ($request->ajax() || $request->wantsJson()) {
+                return response()->json([
+                    'success' => true,
+                    'message' => 'Sección actualizada correctamente'
+                ]);
+            }
+
+            return back()->with('success', 'Sección actualizada correctamente');
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            if ($request->ajax() || $request->wantsJson()) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Error de validación',
+                    'errors' => $e->errors()
+                ], 422);
+            }
+            throw $e;
+        } catch (\Exception $e) {
+            if ($request->ajax() || $request->wantsJson()) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Error al actualizar la sección: ' . $e->getMessage()
+                ], 500);
+            }
+            throw $e;
+        }
     }
 }

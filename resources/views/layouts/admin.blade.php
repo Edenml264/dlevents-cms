@@ -16,7 +16,7 @@
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
 <body class="font-sans antialiased">
-    <div class="min-h-screen bg-white">
+    <div class="min-h-screen bg-gray-100">
         <!-- Navigation -->
         <x-navbar />
 
@@ -28,5 +28,8 @@
         <!-- Footer -->
         <x-footer />
     </div>
+
+    @stack('modals')
+    @stack('scripts')
 </body>
 </html>

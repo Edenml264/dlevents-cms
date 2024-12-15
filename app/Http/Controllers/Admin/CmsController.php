@@ -25,11 +25,13 @@ class CmsController extends Controller
 
     public function settings()
     {
-        $settings = SiteSetting::orderBy('order')
-            ->get()
-            ->groupBy('group');
+        $settings = collect(SiteSetting::orderBy('order')->get())
+            ->groupBy('group')
+            ->map(function ($group) {
+                return $group->keyBy('key');
+            });
             
-        $navbarSettings = NavbarSetting::first();
+        $navbarSettings = NavbarSetting::getCurrentSettings();
         
         return view('admin.cms.settings', compact('settings', 'navbarSettings'));
     }
@@ -66,7 +68,8 @@ class CmsController extends Controller
                             Log::info("Imagen actualizada para {$key}", ['path' => $value]);
                         }
                         
-                        $setting->update(['value' => $value]);
+                        // Usar el método setCached en lugar de update directo
+                        SiteSetting::setCached($key, $value);
                         Log::info("Configuración actualizada: {$key}", ['value' => $value]);
                     }
                 }
@@ -97,27 +100,22 @@ class CmsController extends Controller
                 $navbarSettings->social_links = $request->input('navbar.social_links', []);
                 $navbarSettings->save();
 
+                // Limpiar caché después de actualizar configuraciones
+                SiteSetting::clearCache();
+                
                 Log::info('Configuraciones del navbar actualizadas', [
                     'show_button' => $navbarSettings->show_contact_button,
-                    'button_text' => $navbarSettings->contact_button_text,
-                    'social_links' => $navbarSettings->social_links
+                    'button_text' => $navbarSettings->contact_button_text
                 ]);
             }
 
             DB::commit();
-            Log::info('Configuraciones actualizadas exitosamente');
-
-            return back()->with('success', 'Configuración actualizada correctamente');
+            return redirect()->back()->with('success', 'Configuraciones actualizadas correctamente');
+            
         } catch (\Exception $e) {
             DB::rollBack();
-            Log::error('Error al actualizar configuraciones: ' . $e->getMessage(), [
-                'exception' => $e,
-                'trace' => $e->getTraceAsString()
-            ]);
-
-            return back()
-                ->with('error', 'Error al actualizar la configuración: ' . $e->getMessage())
-                ->withInput();
+            Log::error('Error al actualizar configuraciones: ' . $e->getMessage());
+            return redirect()->back()->with('error', 'Error al actualizar las configuraciones');
         }
     }
 

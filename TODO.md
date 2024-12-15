@@ -1,33 +1,33 @@
 # DL Events CMS - Lista de Tareas Pendientes
 
 ## ⚠️ PRIORIDAD ALTA - Configuraciones del Sitio
-FEATURE: Corrección de configuraciones generales del CMS
-  - TASK [URGENTE]: Depurar por qué no se aplican los cambios en el frontend para todas las configuraciones
-  - TASK [URGENTE]: Verificar la estructura de datos en la base de datos para cada sección:
+FEATURE [DONE]: Corrección de configuraciones generales del CMS
+  - TASK [DONE]: Depurar por qué no se aplican los cambios en el frontend para todas las configuraciones
+  - TASK [DONE]: Verificar la estructura de datos en la base de datos para cada sección:
     * Configuraciones generales (nombre del sitio, descripción, etc.)
     * Configuraciones de tipografía
     * Configuraciones de colores
     * Configuraciones de imágenes
     * Configuraciones del navbar
-  - TASK [URGENTE]: Agregar sistema de logs para rastrear los datos en cada sección
-  - TASK [URGENTE]: Implementar sistema de caché para las configuraciones
-  - TASK: Probar todas las funcionalidades:
-    * General:
+  - TASK [DONE]: Agregar sistema de logs para rastrear los datos en cada sección
+  - TASK [DONE]: Implementar sistema de caché para las configuraciones
+  - TASK [DONE]: Probar todas las funcionalidades:
+    * General [DONE]:
       - Título del sitio
       - Descripción
       - Información de contacto
-    * Tipografía:
+    * Tipografía [DONE]:
       - Fuentes seleccionadas
       - Tamaños de texto
-    * Colores:
+    * Colores [DONE]:
       - Colores principales
       - Colores de fondo
       - Colores de texto
-    * Imágenes:
+    * Imágenes [DONE]:
       - Logo principal
       - Favicon
       - Imágenes por defecto
-    * Navbar:
+    * Navbar [DONE]:
       - Logo
       - Botón de contacto
       - Enlaces de redes sociales
@@ -52,9 +52,9 @@ FEATURE: Mejoras del sistema de gestión de contenido
   - TASK: Agregar programación de publicaciones
   - TASK: Agregar más shortcodes personalizados
   - TASK [NUEVO]: Mejorar sistema de configuración del CMS
-    * Implementar validación de campos
-    * Agregar previsualización en tiempo real de cambios
-    * Optimizar guardado de imágenes
+    * [DONE] Implementar validación de campos
+    * [DONE] Agregar previsualización en tiempo real de cambios
+    * [DONE] Optimizar guardado de imágenes
   - TASK [NUEVO]: Implementar constructor de páginas drag & drop
     * Crear biblioteca de componentes predefinidos:
       - Headers y banners
@@ -93,7 +93,7 @@ FEATURE: Mejoras de seguridad del sistema
 
 ## Optimización de Rendimiento
 FEATURE: Optimización de velocidad y rendimiento
-  - TASK: Implementar sistema de caché para secciones
+  - TASK [DONE]: Implementar sistema de caché para secciones
   - TASK: Configurar compresión de assets
   - TASK: Implementar CDN para archivos estáticos
   - TASK: Agregar minificación de CSS/JS

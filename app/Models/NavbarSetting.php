@@ -2,11 +2,14 @@
 
 namespace App\Models;
 
+use App\Traits\CacheableSetting;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Cache;
 
 class NavbarSetting extends Model
 {
+    use CacheableSetting;
+
     protected $fillable = [
         'logo',
         'show_contact_button',
@@ -20,39 +23,44 @@ class NavbarSetting extends Model
     ];
 
     protected $attributes = [
-        'show_contact_button' => false,
+        'show_contact_button' => true,
         'contact_button_text' => 'Contáctanos',
         'social_links' => '[]'
     ];
 
-    protected $appends = ['logo_url'];
+    public function getLogoUrlAttribute()
+    {
+        return $this->logo ? asset($this->logo) : null;
+    }
 
     public static function getCurrentSettings()
     {
-        return static::firstOrCreate([], [
-            'show_contact_button' => false,
-            'contact_button_text' => 'Contáctanos',
-            'social_links' => []
-        ]);
+        return Cache::remember('navbar_settings', static::$cacheTime, function () {
+            $settings = static::first();
+            
+            if (!$settings) {
+                $settings = static::create([
+                    'show_contact_button' => true,
+                    'contact_button_text' => 'Contáctanos',
+                    'social_links' => []
+                ]);
+            }
+            
+            return $settings;
+        });
     }
 
-    public function getLogoUrlAttribute()
+    public static function clearNavbarCache()
     {
-        if (!$this->logo) {
-            return null;
-        }
+        Cache::forget('navbar_settings');
+    }
 
-        // Si la ruta ya es una URL completa, devuélvela
-        if (filter_var($this->logo, FILTER_VALIDATE_URL)) {
-            return $this->logo;
-        }
+    protected static function boot()
+    {
+        parent::boot();
 
-        // Si la ruta comienza con /storage, conviértela a URL
-        if (str_starts_with($this->logo, '/storage')) {
-            return url($this->logo);
-        }
-
-        // Si es una ruta relativa, conviértela a URL
-        return Storage::disk('public')->url($this->logo);
+        static::saved(function ($model) {
+            static::clearNavbarCache();
+        });
     }
 }

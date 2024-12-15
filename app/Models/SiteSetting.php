@@ -2,10 +2,13 @@
 
 namespace App\Models;
 
+use App\Traits\CacheableSetting;
 use Illuminate\Database\Eloquent\Model;
 
 class SiteSetting extends Model
 {
+    use CacheableSetting;
+
     protected $fillable = [
         'key',
         'value',
@@ -21,12 +24,18 @@ class SiteSetting extends Model
         'options' => 'array'
     ];
 
+    /**
+     * @deprecated Use getCached() instead
+     */
     public static function get($key, $default = null)
     {
         $setting = static::where('key', $key)->first();
         return $setting ? $setting->value : $default;
     }
 
+    /**
+     * @deprecated Use setCached() instead
+     */
     public static function set($key, $value)
     {
         $setting = static::where('key', $key)->first();

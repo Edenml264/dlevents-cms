@@ -9,6 +9,8 @@ use App\Models\SiteSetting;
 use App\Models\NavbarSetting;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\DB;
 
 class CmsController extends Controller
 {
@@ -34,39 +36,89 @@ class CmsController extends Controller
 
     public function updateSettings(Request $request)
     {
-        // Actualizar configuraciones generales
-        foreach ($request->settings as $key => $value) {
-            $setting = SiteSetting::where('key', $key)->first();
-            
-            if ($setting) {
-                if ($setting->type === 'image' && $request->hasFile("settings.{$key}")) {
-                    $path = $request->file("settings.{$key}")->store('public/settings');
-                    $value = Storage::url($path);
+        Log::info('Iniciando actualización de configuraciones', [
+            'has_settings' => $request->has('settings'),
+            'has_navbar' => $request->has('navbar')
+        ]);
+
+        try {
+            DB::beginTransaction();
+
+            // 1. Actualizar configuraciones generales
+            if ($request->has('settings')) {
+                foreach ($request->settings as $key => $value) {
+                    $setting = SiteSetting::where('key', $key)->first();
+                    
+                    if ($setting) {
+                        if ($setting->type === 'image' && $request->hasFile("settings.{$key}")) {
+                            // Eliminar imagen anterior si existe
+                            if ($setting->value) {
+                                $oldPath = str_replace('/storage/', '', $setting->value);
+                                if (Storage::disk('public')->exists($oldPath)) {
+                                    Storage::disk('public')->delete($oldPath);
+                                }
+                            }
+                            
+                            $file = $request->file("settings.{$key}");
+                            $path = $file->store('settings', 'public');
+                            $value = 'storage/' . $path;
+                            
+                            Log::info("Imagen actualizada para {$key}", ['path' => $value]);
+                        }
+                        
+                        $setting->update(['value' => $value]);
+                        Log::info("Configuración actualizada: {$key}", ['value' => $value]);
+                    }
                 }
+            }
+
+            // 2. Actualizar configuraciones del navbar
+            if ($request->has('navbar')) {
+                $navbarSettings = NavbarSetting::getCurrentSettings();
                 
-                $setting->update(['value' => $value]);
+                if ($request->hasFile('navbar.logo')) {
+                    // Eliminar logo anterior si existe
+                    if ($navbarSettings->logo) {
+                        $oldPath = str_replace('/storage/', '', $navbarSettings->logo);
+                        if (Storage::disk('public')->exists($oldPath)) {
+                            Storage::disk('public')->delete($oldPath);
+                        }
+                    }
+                    
+                    $file = $request->file('navbar.logo');
+                    $path = $file->store('navbar', 'public');
+                    $navbarSettings->logo = 'storage/' . $path;
+                    
+                    Log::info('Logo del navbar actualizado', ['path' => $navbarSettings->logo]);
+                }
+
+                $navbarSettings->show_contact_button = $request->boolean('navbar.show_contact_button');
+                $navbarSettings->contact_button_text = $request->input('navbar.contact_button_text');
+                $navbarSettings->social_links = $request->input('navbar.social_links', []);
+                $navbarSettings->save();
+
+                Log::info('Configuraciones del navbar actualizadas', [
+                    'show_button' => $navbarSettings->show_contact_button,
+                    'button_text' => $navbarSettings->contact_button_text,
+                    'social_links' => $navbarSettings->social_links
+                ]);
             }
+
+            DB::commit();
+            Log::info('Configuraciones actualizadas exitosamente');
+
+            return back()->with('success', 'Configuración actualizada correctamente');
+        } catch (\Exception $e) {
+            DB::rollBack();
+            Log::error('Error al actualizar configuraciones: ' . $e->getMessage(), [
+                'exception' => $e,
+                'trace' => $e->getTraceAsString()
+            ]);
+
+            return back()
+                ->with('error', 'Error al actualizar la configuración: ' . $e->getMessage())
+                ->withInput();
         }
-
-        // Actualizar configuraciones del navbar
-        if ($request->has('navbar')) {
-            $navbarSettings = NavbarSetting::first();
-            if (!$navbarSettings) {
-                $navbarSettings = new NavbarSetting();
-            }
-
-            if ($request->hasFile('navbar.logo')) {
-                $path = $request->file('navbar.logo')->store('public/navbar');
-                $navbarSettings->logo = Storage::url($path);
-            }
-
-            $navbarSettings->show_contact_button = $request->input('navbar.show_contact_button', false);
-            $navbarSettings->contact_button_text = $request->input('navbar.contact_button_text');
-            $navbarSettings->social_links = $request->input('navbar.social_links', []);
-            $navbarSettings->save();
-        }
-
-        return back()->with('success', 'Configuración actualizada correctamente');
     }
 
     public function editPage(Page $page)

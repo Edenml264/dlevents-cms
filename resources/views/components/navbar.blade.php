@@ -8,10 +8,10 @@ $activePages = App\Models\MenuItem::active()->ordered()->get();
         <div class="flex justify-between h-16">
             <!-- Logo -->
             <div class="flex-shrink-0 flex items-center">
-                @if($navbarSettings->logo)
+                @if($navbarSettings->logo_url)
                     <a href="{{ route('home') }}">
                         <img class="h-8 w-auto" 
-                             src="{{ $navbarSettings->logo }}" 
+                             src="{{ $navbarSettings->logo_url }}" 
                              alt="{{ config('app.name') }}">
                     </a>
                 @else

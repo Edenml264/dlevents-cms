@@ -51,7 +51,7 @@
                                             @case('image')
                                                 <div class="flex items-center space-x-4">
                                                     @if($setting->value)
-                                                        <img src="{{ $setting->value }}" 
+                                                        <img src="{{ asset($setting->value) }}" 
                                                              alt="{{ $setting->label }}" 
                                                              class="h-12 w-12 object-cover rounded">
                                                     @endif
@@ -99,7 +99,7 @@
                             <div class="sm:col-span-2">
                                 <div class="flex items-center space-x-4">
                                     @if($navbarSettings && $navbarSettings->logo)
-                                        <img src="{{ $navbarSettings->logo }}" 
+                                        <img src="{{ asset($navbarSettings->logo) }}" 
                                              alt="Logo actual" 
                                              class="h-12 w-auto object-contain rounded">
                                     @endif

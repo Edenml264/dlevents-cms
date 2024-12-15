@@ -6,7 +6,9 @@ use App\Http\Controllers\Controller;
 use App\Models\Page;
 use App\Models\PageSection;
 use App\Models\SiteSetting;
+use App\Models\NavbarSetting;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 class CmsController extends Controller
 {
@@ -21,17 +23,47 @@ class CmsController extends Controller
 
     public function settings()
     {
-        $settings = SiteSetting::all()->pluck('value', 'key');
-        return view('admin.cms.settings', compact('settings'));
+        $settings = SiteSetting::orderBy('order')
+            ->get()
+            ->groupBy('group');
+            
+        $navbarSettings = NavbarSetting::first();
+        
+        return view('admin.cms.settings', compact('settings', 'navbarSettings'));
     }
 
     public function updateSettings(Request $request)
     {
-        foreach ($request->except('_token') as $key => $value) {
-            SiteSetting::updateOrCreate(
-                ['key' => $key],
-                ['value' => $value]
-            );
+        // Actualizar configuraciones generales
+        foreach ($request->settings as $key => $value) {
+            $setting = SiteSetting::where('key', $key)->first();
+            
+            if ($setting) {
+                if ($setting->type === 'image' && $request->hasFile("settings.{$key}")) {
+                    $path = $request->file("settings.{$key}")->store('public/settings');
+                    $value = Storage::url($path);
+                }
+                
+                $setting->update(['value' => $value]);
+            }
+        }
+
+        // Actualizar configuraciones del navbar
+        if ($request->has('navbar')) {
+            $navbarSettings = NavbarSetting::first();
+            if (!$navbarSettings) {
+                $navbarSettings = new NavbarSetting();
+            }
+
+            if ($request->hasFile('navbar.logo')) {
+                $path = $request->file('navbar.logo')->store('public/navbar');
+                $navbarSettings->logo = Storage::url($path);
+            }
+
+            $navbarSettings->show_contact_button = $request->input('navbar.show_contact_button', false);
+            $navbarSettings->contact_button_text = $request->input('navbar.contact_button_text');
+            $navbarSettings->social_links = $request->input('navbar.social_links', []);
+            $navbarSettings->save();
         }
 
         return back()->with('success', 'Configuración actualizada correctamente');

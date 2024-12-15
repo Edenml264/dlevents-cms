@@ -1,7 +1,12 @@
 @extends('admin.layouts.admin')
 
 @section('header')
-    {{ __('CMS Management') }}
+    <div class="flex justify-between items-center">
+        {{ __('CMS Management') }}
+        <a href="{{ route('admin.cms.settings') }}" class="inline-flex items-center px-4 py-2 bg-dl-brown text-white rounded hover:bg-dl-brown-dark transition-colors">
+            <i class="fas fa-cog mr-2"></i>Ajustes
+        </a>
+    </div>
 @endsection
 
 @section('content')

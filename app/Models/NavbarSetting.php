@@ -7,9 +7,9 @@ use Illuminate\Database\Eloquent\Model;
 class NavbarSetting extends Model
 {
     protected $fillable = [
-        'logo_path',
+        'logo',
         'show_contact_button',
-        'contact_phone',
+        'contact_button_text',
         'social_links'
     ];
 
@@ -18,17 +18,8 @@ class NavbarSetting extends Model
         'social_links' => 'array'
     ];
 
-    // Helper para obtener la configuración actual
     public static function getCurrentSettings()
     {
-        return static::firstOrCreate([], [
-            'show_contact_button' => false,
-            'social_links' => [
-                'facebook' => '',
-                'instagram' => '',
-                'twitter' => '',
-                'youtube' => ''
-            ]
-        ]);
+        return static::firstOrCreate([]);
     }
 }
